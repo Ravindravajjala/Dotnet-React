@@ -1,0 +1,60 @@
+//PUT Method
+
+
+        [HttpPut]
+        [Route("Admin/{AdminId}")]
+        public IActionResult UpdateAdmin([FromRoute] int? AdminId, [FromBody] Admin updatedAdmin)
+        {
+            if (AdminId == null)
+            {
+                return NotFound("Admin ID is required");
+            }
+
+            var existingAdmin = dbContext.Admins.Find(AdminId);
+
+            if (existingAdmin == null)
+            {
+                return NotFound("Admin not found");
+            }
+
+            // Update the properties of the existing admin with the values from updatedAdmin
+            existingAdmin.FirstName = updatedAdmin.FirstName;
+            existingAdmin.LastName = updatedAdmin.LastName;
+            existingAdmin.Email = updatedAdmin.Email;
+            existingAdmin.Password = updatedAdmin.Password;
+
+            dbContext.SaveChanges();
+
+            return Ok(updatedAdmin);
+        }
+
+
+//PUT Method
+
+[HttpPut]
+[Route("Order/{OrderId}")]
+public IActionResult UpdateOrder([FromRoute] int? OrderId, [FromBody] Order order)
+{
+    if(OrderId == null)
+    {
+        return BadRequest();
+    }
+
+    var orders = dbContext.Orders.Find(OrderId);
+
+    if(orders == null)
+    {
+        return NotFound();
+    }
+
+    orders.ItemName = order.ItemName;
+    orders.CustomerId = order.CustomerId;
+    orders.Price = order.Price;
+    orders.Quantity = order.Quantity;
+    orders.TotalPrice = order.TotalPrice;
+
+    dbContext.Orders.Update(orders);
+    dbContext.SaveChanges();
+
+    return Ok(orders);
+}
