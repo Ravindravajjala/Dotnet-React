@@ -1,0 +1,24 @@
+//LOGIN Method
+
+        [HttpPost("login")]
+        public IActionResult AdminLogin([FromBody] Admin login)
+        {
+            if (login == null)
+            {
+                return BadRequest("Enter Admin details");
+            }
+
+            var admin = dbContext.Admins.FirstOrDefault(options => options.Email == login.Email);
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            if (admin.Password != login.Password)
+            {
+                return BadRequest("Incorrect Password");
+            }
+
+            return Ok("admin logged in successfully");
+        }
