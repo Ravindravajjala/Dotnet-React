@@ -1,0 +1,130 @@
+//REACT REGISTRATION PAGE
+
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+const Register = () => {
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    password: '',
+    emailAddress: '',
+  });
+
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+
+  const handleRegister = async () => {
+    
+    if (!user.firstName || !user.lastName || !user.emailAddress || !user.password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(user.emailAddress)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('https://localhost:44317/api/Users', user);
+
+      if (response.status === 200) {
+
+        setError(null);
+        setSuccessMessage('User registered successfully.');
+      } 
+      else if (user.password.length < 8) {
+        setError('Password must be at least 8 characters long.');
+        return;
+      }else {
+        
+        setError('Registration failed');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setError('An error occurred during registration');
+    }
+  };
+  
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.heading}>Register</h2>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>First Name:</label>
+        <input type="text" name="firstName" value={user.firstName} onChange={handleChange} style={styles.input} />
+      </div>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Last Name:</label>
+        <input type="text" name="lastName" value={user.lastName} onChange={handleChange} style={styles.input} />
+      </div>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Email Address:</label>
+        <input type="email" name="emailAddress" value={user.emailAddress} onChange={handleChange} style={styles.input} />
+      </div>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Password:</label>
+        <input type="password" name="password" value={user.password} onChange={handleChange} style={styles.input} />
+      </div>
+      {error && <div style={{ color: 'red', margin: '10px 0' }}>{error}</div>}
+      {successMessage && <div style={{ color: 'green', margin: '10px 0' }}>{successMessage}</div>}
+      <button onClick={handleRegister} style={styles.button}>Register</button>
+      <h2 style={styles.linkText}>Click here to <Link to="/Login">Login</Link></h2>
+    </div>
+  );
+};
+
+const styles = {
+  container: {
+    maxWidth: '400px',
+    margin: 'auto',
+    padding: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    marginTop: '50px',
+  },
+  heading: {
+    textAlign: 'center',
+    color: 'rgb(205, 125, 50)',
+    fontWeight: 'bold',
+  },
+  formGroup: {
+    marginBottom: '15px',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+  },
+  input: {
+    width: '100%',
+    padding: '8px',
+    borderRadius: '3px',
+    border: '1px solid #ccc',
+  },
+  button: {
+    backgroundColor: 'rgb(205, 125, 50)',
+    color: '#fff',
+    padding: '10px',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    width: '100%',
+  },
+  linkText: {
+    marginTop: '10px',
+    textAlign: 'center',
+  }
+};
+
+export default Register;
