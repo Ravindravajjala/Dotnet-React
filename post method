@@ -1,0 +1,36 @@
+//POST Method
+        [HttpPost]
+        public IActionResult AddOrders([FromBody] Order order)
+        {
+            if (order == null)
+            {
+                return BadRequest("Enter OrderDetails");
+            }
+
+            var orders = dbContext.Orders.Add(order);
+            if (orders == null)
+            {
+                return BadRequest("Order details cant be empty");
+            }
+            dbContext.Orders.Add(order);
+            dbContext.SaveChanges();
+            return Ok(order);
+        }
+
+//Post Method
+
+     [HttpPost("RegisterAdmin")]
+     public async Task<IActionResult> RegisterAdmin([FromBody] Admin admin)
+     {
+         if (ModelState.IsValid)
+         {
+             dbContext.Add(admin);
+             dbContext.SaveChanges();
+
+             // Assuming you want to return a success status with the added admin
+             return Ok(admin);
+         }
+
+         // If ModelState is not valid, return a BadRequest with the validation errors
+         return BadRequest(ModelState);
+     }
