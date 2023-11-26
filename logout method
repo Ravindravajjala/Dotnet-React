@@ -1,0 +1,15 @@
+//LOGOUT Method
+
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                return Ok("Logout Successful");
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
