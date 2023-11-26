@@ -1,0 +1,45 @@
+//DELETE Method
+
+        [HttpDelete("Admin/{AdminId}")]
+        public IActionResult DeleteAdmin([FromRoute] int? AdminId)
+        {
+            if (AdminId == null)
+            {
+                return BadRequest("AdminId is required");
+            }
+
+            var admin = dbContext.Admins.Find(AdminId);
+
+            if (admin == null)
+            {
+                return NotFound("Admin not found");
+            }
+
+            dbContext.Admins.Remove(admin);
+            dbContext.SaveChanges();
+            return Ok(admin);
+        }
+
+//DELETE Method
+
+ [HttpDelete]
+ [Route("Order/{OrderId}")]
+ public IActionResult DeleteOrders([FromRoute] int? OrderId)
+ {
+     if(OrderId == null)
+     {
+         return BadRequest();
+     }
+
+     var orders = dbContext.Orders.Find(OrderId);
+
+     if(orders == null)
+     {
+         return NotFound();
+     }
+
+     dbContext.Orders.Remove(orders);
+     dbContext.SaveChanges();
+
+     return Ok(orders);
+ }
