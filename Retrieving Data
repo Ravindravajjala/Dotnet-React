@@ -1,0 +1,29 @@
+//GET Method
+
+[HttpGet("GetAllAdmins")]
+public async Task<IActionResult> GetAllAdmins()
+{
+    var admin = await dbContext.Admins.ToListAsync();
+
+    return Ok(admin);
+}
+
+//GET Method BY ID
+[HttpGet]
+[Route("{AdminId}")]
+public IActionResult GetAdminById([FromRoute] int? AdminId)
+{
+
+    if (AdminId == null)
+    {
+        return NotFound();
+    }
+
+    var admin = dbContext.Admins.Find(AdminId);
+    if (admin == null)
+    {
+        return NotFound();
+    }
+    return Ok(admin);
+}
+
