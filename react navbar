@@ -1,0 +1,89 @@
+//REACT Navbar Page
+
+import React from "react";
+import { Link } from "react-router-dom";
+
+function Layout() {
+  
+  return (
+    <>
+      <nav style={styles.navbar}>
+        <div style={styles.navbarContainer}>
+          <div style={styles.navbarLeft}>
+            <h1 style={styles.appName}>BookStore</h1>
+          </div>
+          <ul style={styles.navbarList}>
+            <div style={styles.navbarItem}>
+              <Link to="/Books" style={styles.navLink}>
+                Books
+              </Link>
+            </div>
+            <div style={styles.navbarItem}>
+              <Link to="/AddBook" style={styles.navLink}>
+                AddBook
+              </Link>
+            </div>
+            <div style={styles.navbarItem}>
+              <Link to="/BookDetails" style={styles.navLink}>
+                BookDetails
+              </Link>
+              </div>
+              <div style={styles.navbarItem}>
+              <Link to="/RemoveBooks" style={styles.navLink}>
+                RemoveBooks
+              </Link>
+              </div>
+              <div style={styles.navbarItem}>
+              <Link to="/Login" style={styles.navLink}>
+                Logout
+              </Link>
+            </div>
+          </ul>
+        </div>
+      </nav>
+    </>
+  );
+}
+
+const styles = {
+  navbar: {
+    backgroundColor: "#333",
+    color: "#fff",
+    padding: "10px 0",
+  },
+  navbarContainer: {
+    maxWidth: "1200px",
+    margin: "0 auto",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  navbarLeft: {
+    display: "flex",
+    alignItems: "center",
+  },
+  appName: {
+    textDecoration: "none",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "24px",
+    marginRight: "20px",
+  },
+  navbarList: {
+    listStyle: "none",
+    display: "flex",
+    padding: 0,
+    margin: 0,
+  },
+  navbarItem: {
+    marginRight: "20px",
+  },
+  navLink: {
+    textDecoration: "none",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "16px",
+  },
+};
+
+export default Layout;
