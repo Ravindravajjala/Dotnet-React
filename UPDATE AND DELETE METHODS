@@ -1,0 +1,192 @@
+//Update and Delete methods
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link,useNavigate } from 'react-router-dom';
+import './BookDetails.css';
+import Layout from './Navbar';
+
+function Books() {
+  const [books, setBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const currentDate=new Date().toISOString().split('T')[0];
+  let navigate = useNavigate();
+  useEffect(() => {
+    
+    fetchBooks();
+  }, []);
+ 
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get('https://localhost:44317/api/Books');
+      setBooks(response.data);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+    }
+  };
+  
+ 
+  const handleUpdateClick = (book) => {
+    
+    setSelectedBook(book);
+  };
+ 
+  const handleUpdateSubmit = async (updatedBook) => {
+    try {
+      const bookId = selectedBook.bookId;
+      
+      await axios.put(`https://localhost:44317/api/Books/${bookId}`, updatedBook);
+ 
+      
+      fetchBooks();
+ 
+      
+      setSelectedBook(null);
+    } catch (error) {
+      console.error('Error updating book:', error);
+    }
+  };
+  const handleDeleteClick = async (bookId) => {
+    try {
+      await axios.delete(`https://localhost:44317/api/Books/${bookId}`);
+  
+      fetchBooks();
+    } catch (error) {
+      console.error('Error deleting book:', error);
+    }
+  };
+  
+
+  const format=(d)=>{
+    var  rand=new Date(d);
+    return rand.toLocaleDateString();
+  }
+ 
+ 
+  return (
+    <>
+    <Layout/>
+    <div className="container mt-5">
+      <h2 align="center" className="text-center mb-4">Book Details</h2>
+      <table align="center" className="table table-striped">
+        <thead>
+          <tr>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Publish Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {books.map((book) => (
+            <tr key={book.bookId}>
+              <td>{book.isbn}</td>
+              <td>{book.title}</td>
+              <td>{book.author}</td>
+              <td>{book.genre}</td>
+              <td>{format(book.publishDate)}</td>
+              <td>
+                <button
+                  onClick={() => handleUpdateClick(book)}
+                  className="btn btn-primary btn-sm"
+                >
+                  Update
+                </button>
+
+                <button 
+                   onClick={() => handleDeleteClick(book.bookId)}
+                   className="btn btn-danger btn-sm"
+                   >
+                    Delete
+                   </button>
+         
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+ 
+      {selectedBook && (
+        <div align="center" className="mt-4">
+          <h3 className="mb-3">Update Book</h3>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdateSubmit(selectedBook);
+            }}
+          >
+            <div className="mb-3">
+              <label className="form-label">ISBN:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={selectedBook.isbn}
+                onChange={(e) =>
+                  setSelectedBook({ ...selectedBook, isbn: e.target.value })
+                }
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Title:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={selectedBook.title}
+                onChange={(e) =>
+                  setSelectedBook({ ...selectedBook, title: e.target.value })
+                }
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Author:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={selectedBook.author}
+                onChange={(e) =>
+                  setSelectedBook({ ...selectedBook, author: e.target.value })
+                }
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Genre:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={selectedBook.genre}
+                onChange={(e) =>
+                  setSelectedBook({ ...selectedBook, genre: e.target.value })
+                }
+              />
+            </div>
+            <div className="mb-3">
+            <input
+  type="date"
+  className="form-control"
+  value={selectedBook.publishDate}
+  max={new Date().toISOString().split('T')[0]}
+  onChange={(e) =>
+    setSelectedBook({
+      ...selectedBook,
+      publishDate: e.target.value,
+    })
+  }
+/>
+
+            </div>
+            <button type="submit" className="btn btn-success">
+              Update
+         </button>
+          </form>
+        </div>
+      )}
+    </div>
+    </>
+  );
+}
+ 
+ 
+ 
+export default Books;
